@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prueba login operarios</title>
+<style>
+  :root { --bg:#f4f6f8; --card:#fff; --tx:#0f172a; --mut:#64748b; --ok:#15803d; --bad:#b91c1c; --bd:#cbd5e1; --btn:#1e293b; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0f1115; --card:#171a21; --tx:#e8eaed; --mut:#9aa3af; --ok:#4ade80; --bad:#f87171; --bd:#2a303b; --btn:#334155; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--tx); font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+  main { max-width:420px; margin:32px auto; padding:0 16px; }
+  .card { background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:22px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  p.sub { color:var(--mut); margin:0 0 18px; font-size:14px; }
+  label { display:block; font-weight:600; margin-bottom:6px; font-size:18px; }
+  input { width:100%; font-size:26px; padding:12px 14px; border:2px solid var(--bd); border-radius:12px; background:transparent; color:var(--tx); letter-spacing:2px; }
+  button { width:100%; margin-top:14px; min-height:52px; font-size:19px; font-weight:700; border:0; border-radius:12px; background:var(--btn); color:#fff; cursor:pointer; }
+  button:disabled { opacity:.55; }
+  #res { margin-top:18px; font-size:17px; }
+  .ok { color:var(--ok); font-weight:700; }
+  .bad { color:var(--bad); font-weight:700; }
+  dl { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; margin:10px 0 0; font-size:15px; }
+  dt { color:var(--mut); }
+  dd { margin:0; word-break:break-all; }
+  .nota { color:var(--mut); font-size:13px; margin-top:16px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="card">
+    <h1>Prueba de login de operarios</h1>
+    <p class="sub">Solo prueba si el login por legajo funciona desde esta red. No carga nada ni cambia nada.</p>
+    <label for="leg">Legajo</label>
+    <input id="leg" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="6">
+    <button id="btn" type="button">Probar</button>
+    <div id="res" aria-live="polite"></div>
+    <p class="nota">Si da "fuera de la red", anotá la IP que aparece y avisale a Thomas.</p>
+  </div>
+</main>
+<script>
+  // Clave pública (la misma que ya usan todas las apps). No da permisos por sí sola.
+  var URL_SB = "https://hrxfctzncixxqmpfhskv.supabase.co";
+  var KEY = "sb_publishable_BqpAgZH6ty-9wft10_YMhw_0rcIPuWT";
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  async function post(path, body, token) {
+    var r = await fetch(URL_SB + path, { method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": KEY, "Authorization": "Bearer " + (token || KEY) },
+      body: JSON.stringify(body || {}) });
+    var d = null; try { d = await r.json(); } catch (e) {}
+    return { status: r.status, data: d };
+  }
+  async function miIp() {
+    try { var r = await post("/functions/v1/fichada-qr-fichar", { whoami: true }); return (r.data && r.data.ip) || "?"; }
+    catch (e) { return "?"; }
+  }
+  $("btn").onclick = async function () {
+    var leg = $("leg").value.replace(/\D/g, "");
+    if (!leg) { $("res").innerHTML = '<span class="bad">Escribí un legajo.</span>'; return; }
+    $("btn").disabled = true; $("res").textContent = "Probando…";
+    try {
+      var ip = await miIp();
+      var r = await post("/functions/v1/login-operario", { legajo: leg, app: "prueba-login" });
+      if (r.status === 200 && r.data && r.data.access_token) {
+        var rol = await post("/rest/v1/rpc/jwt_rol", {}, r.data.access_token);
+        var lg = await post("/rest/v1/rpc/jwt_legajo", {}, r.data.access_token);
+        $("res").innerHTML = '<div class="ok">✅ Funciona</div><dl>' +
+          '<dt>Operario</dt><dd>' + esc(r.data.nombre) + ' (' + esc(r.data.legajo) + ')</dd>' +
+          '<dt>Red</dt><dd>' + esc(r.data.sede) + '</dd>' +
+          '<dt>La base lo ve como</dt><dd>' + esc(rol.data) + ', legajo ' + esc(lg.data) + '</dd>' +
+          '<dt>IP</dt><dd>' + esc(ip) + '</dd></dl>';
+      } else {
+        $("res").innerHTML = '<div class="bad">❌ ' + esc((r.data && r.data.error) || ("Error " + r.status)) + '</div>' +
+          '<dl><dt>IP</dt><dd>' + esc(ip) + '</dd></dl>';
+      }
+    } catch (e) {
+      $("res").innerHTML = '<div class="bad">❌ Sin conexión: ' + esc(e.message) + '</div>';
+    }
+    $("btn").disabled = false;
+  };
+  $("leg").addEventListener("keydown", function (e) { if (e.key === "Enter") $("btn").click(); });
+</script>
+</body>
+</html>

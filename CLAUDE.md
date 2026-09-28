@@ -1,0 +1,184 @@
+# Prueba-Login-Operarios — instrucciones para Claude
+
+Página de prueba (una sola, `index.html`) del login de operarios por **legajo + red de la empresa**
+(Edge Function `login-operario`, proyecto Supabase `hrxfctzncixxqmpfhskv`). Plan completo en
+`loekemeyer/Gestion-Virgilio` → `docs/PLAN-LOGIN-OPERARIOS-RED.md`.
+
+- No carga ni cambia datos: pide sesión, pregunta `jwt_rol()` / `jwt_legajo()` y muestra el resultado.
+- Solo lleva la clave pública (`sb_publishable_…`), la misma que ya está en los repos públicos.
+- **Es temporal**: terminadas las pruebas en planta, borrar el repo o apagar GitHub Pages.
+- Todo va a `main`.
+
+## ⚠ REGLA: preguntar QUIÉN habla y dejar cada pedido como tarea en su Planify
+
+**Vale para TODOS los repos** (LK, Gestión Virgilio, Planify y cualquiera nuevo: copiar este
+bloque al `CLAUDE.md` del repo nuevo). Objetivo del dueño: que ninguna tarea quede a medio
+hacer sin figurar en la agenda de alguien.
+
+1. **Al empezar la sesión, preguntar quién está hablando** (antes de hacer nada):
+   *"¿Quién sos? (Thomas, Marianela, Luis, Gastón, …)"*. Si el mensaje ya lo dice, no repreguntar.
+2. **Cada pedido de trabajo se registra como tarea en el Planify de esa persona**, apenas se
+   empieza, con nombre MUY resumido (≤ 60 caracteres) y una nota de 1–3 líneas con el
+   contexto. Queda `done=false` hasta que se cierre (punto 4). Si la sesión termina sin
+   cerrar, la tarea queda en la agenda: ése es el objetivo.
+3. **Excepción del dueño — EN ESTE REPO NO SE REGISTRA NADA.** `[Thomas, 2026-09-11, textual:
+   "no registres tareas en planify a tomas"]`. Thomas Loekemeyer no usa Planify y **sus pedidos
+   NO se cargan en el Planify de Tomás Beviglia** — ni con el prefijo `Th ` ni de ninguna otra
+   forma. En GP2 el registro de lo pendiente vive en `CONOCIMIENTO_GP2.md`, `IDEAS-GP2.md` y el
+   `[HISTORIAL]` de `LOCKS.txt`, no en Planify. Los puntos 2, 4 y 5 de arriba **no aplican**
+   mientras el que habla sea Thomas; siguen valiendo si en esta carpeta trabaja otra persona
+   (Marianela, Luis, Gastón, …), que sí tiene su propio Planify.
+
+**Dónde:** proyecto Supabase de Gestión Virgilio `hrxfctzncixxqmpfhskv`, schema `planify`.
+Empleados activos con Planify (`planify.employees`): Marianela Becker **38**, Luis Rial Otero
+**52**, Gastón Dalponte **61**, Tomás Beviglia **20**, Gonzalez Tomas 16, Elías Irace 1,
+Nazareno Rodríguez 27, Angely Asuaje 22, Viviana Gauna 4, Alan Gonzalez 5, Diego Mollo 44,
+Nora Heredia 33, Juan Cruz Karaygan 51, Pablo Martos 6, Martín Cornejo 34, Martín Pregelj 15,
+Romina Maturano 55, Iván Meta 58, Jhonny Cartaya 46. Si el nombre no está, buscar:
+`select id, nombre from planify.employees where activo and nombre ilike '%<apellido>%'`.
+
+```sql
+-- alta (al empezar el pedido)
+insert into planify.tasks (name, type, prio, time, date, note, rec, done, assignment_type,
+  employee_id, department_id, system_generated, broadcast, created_at, updated_at)
+values ('<resumen ≤60>', 'tarea', 'normal', '09:00', to_char(now() at time zone
+  'America/Argentina/Buenos_Aires', 'YYYY-MM-DD'), '<contexto 1-3 líneas> — cargado desde
+  sesión de Claude', 'none', false, 'employee', <employee_id>, null, false, false, now(), now())
+returning id;
+-- cierre (cuando la persona la da por terminada)
+update planify.tasks set done = true, updated_at = now() where id = <id>;
+```
+
+Avisar en el chat el `id` al crearla y al cerrarla. No crear tareas para preguntas o consultas
+que se responden en el momento; sólo para pedidos que implican hacer algo.
+
+4. **Cierre por criterio propio, no sólo por "listo".** Claude evalúa si el objetivo del
+   pedido se cumplió (lo entregado funciona, está commiteado/aplicado, y no quedó ninguna
+   parte del pedido sin hacer). Cuando lo considere cumplido, pregunta **"¿Falta algo más
+   para dar por cerrada la tarea?"** — si la persona dice que no (o no pide nada más
+   dentro de esa tarea), `done=true`. Si dice "listo" antes, también se cierra. Lo que se
+   pidió y quedó a medias NO se cierra: se deja abierta con la nota actualizada
+   ("queda pendiente: …").
+
+5. **Alerta de inactividad (1 hora).** Si hay tareas abiertas de esta sesión y pasa una
+   hora sin mensajes, Claude escribe: *"Te estoy registrando estas tareas pendientes:
+   … ¿Querés continuar alguna o damos por cerrada la charla?"* Cómo: al terminar un turno
+   con tareas abiertas, si la sesión tiene `send_later` (Claude Code web/remoto) o
+   `ScheduleWakeup`, armar UN recordatorio a 60 min (borrar el anterior si existía); al
+   dispararse, si sigue habiendo tareas abiertas, mandar la alerta; si no, no decir nada.
+   En una sesión local sin esas herramientas no hay forma de despertarse sola: en ese
+   caso, al cerrar cada turno con tareas abiertas, dejar la lista escrita en el chat.
+
+6. **Propagar la regla a todo repo nuevo.** Si en una charla se agrega o se toca por
+   primera vez un repo que NO tiene este bloque en su `CLAUDE.md` (se lo trae de referencia,
+   se lo crea, o se le hace un cambio), copiarle este bloque entero (creando el `CLAUDE.md`
+   si no existe) y commitearlo en ese repo, avisando en el chat. Así el dueño no tiene que
+   pedirlo cada vez. Fuente canónica del bloque: `CLAUDE.md` de `loekemeyer/pagina-LK-copia`.
+
+## REGLA: auditar en Supabase cada problema del repo y su solucion
+
+**Vale para TODOS los repos** (igual que la regla de Planify: copiar este bloque al `CLAUDE.md`
+de cualquier repo nuevo). Objetivo: que cada error que tuvo un repositorio quede con su causa,
+su correccion y el/los commits donde se arreglo, para no volver a pisar el mismo pozo.
+
+**Donde:** proyecto Supabase `hrxfctzncixxqmpfhskv`, schema `github_repo_problemas`.
+Se escribe con el MCP de Supabase (`execute_sql`), no con la anon key.
+
+### Que se audita y que NO
+
+Regla corta: **si ya estaba pusheado y andaba mal, se audita.** Si es trabajo nuevo, no.
+
+| Se registra | NO se registra |
+|---|---|
+| Bug en codigo ya pusheado que llego al usuario | Feature nueva o pedido de cambio |
+| Dato corrupto o mal migrado en la base | Refactor pedido por el usuario |
+| Config o credencial rota o filtrada | Bug que introducis y arreglas antes de pushear |
+| Performance degradada, query que no escala | Duda o consulta que se responde en el momento |
+| Tabla derivada desincronizada de su madre | Ajuste de estilo o texto |
+
+### Cuando
+
+1. **Al detectar el problema** (antes de tocar nada): `registrar_problema` devuelve el id.
+2. **Al pushear el fix**: `cerrar_problema` con el sha del commit.
+3. **Si el fix necesita mas commits**: `agregar_commit` por cada uno. Un problema puede tener N
+   commits; NO abrir un problema nuevo por el segundo pase del mismo fix.
+4. Una sesion de Claude puede abarcar **varios** problemas: `sesion_id` no es unico.
+
+### SQL
+
+```sql
+-- 1) al detectar
+select github_repo_problemas.registrar_problema(
+  p_repo          => 'owner/repo',            -- en minuscula
+  p_titulo        => '<sintoma en <=120 chars>',
+  p_descripcion   => '<que se rompio y como se manifesto>',
+  p_categoria     => 'bug',                   -- bug|datos|seguridad|performance|config|ux|deuda_tecnica|documentacion
+  p_severidad     => 'alto',                  -- critico|alto|medio|bajo
+  p_modulo        => 'Carpeta/Modulo',
+  p_archivos      => array['ruta/relativa.html'],
+  p_sesion_id     => '<id de la sesion de Claude>',
+  p_detectado_por => '<usuario> (claude-remote)',
+  p_detectado_en  => now()                    -- fecha REAL si es carga historica
+);
+
+-- 2) al pushear el fix
+select github_repo_problemas.cerrar_problema(
+  p_id            => <id>,
+  p_correccion    => '<que se cambio>',
+  p_commit_sha    => '<sha corto>',
+  p_branch        => '<branch>',
+  p_commit_url    => 'https://github.com/owner/repo/commit/<sha>',
+  p_causa_raiz    => '<por que paso, no que paso>',
+  p_corregido_por => '<usuario> (claude-remote)',
+  p_mensaje       => '<subject del commit>'
+);
+
+-- 3) commits extra del mismo problema
+select github_repo_problemas.agregar_commit(<id>, '<sha>', '<branch>', '<url>', '<mensaje>', '<autor>');
+
+-- lectura
+select * from github_repo_problemas.v_problemas order by detectado_en desc;
+```
+
+**Avisar en el chat el titulo del problema** al registrarlo y al cerrarlo, no el numero de id
+(mismo criterio que Planify).
+
+**Si el problema se detecta pero NO se arregla, queda en `estado='abierto'`.** Ese es el punto:
+que quede anotado. Estados: `abierto` | `en_curso` | `corregido` | `no_corregible` | `descartado`.
+Para pasar a `corregido` la base exige `correccion` y `corregido_en` cargados (constraint).
+
+**La auditoria no se borra.** El rol `anon` tiene SELECT/INSERT/UPDATE pero NO DELETE ni
+TRUNCATE en las tres tablas. Si una fila esta mal, se corrige o se pasa a `descartado`.
+
+## REGLA: toda copia de respaldo nace sin RLS
+
+**Vale para TODOS los repos** (igual que las reglas de Planify y de auditoria: copiar este bloque
+al `CLAUDE.md` de cualquier repo nuevo).
+
+**⚠️ `CREATE TABLE AS` y `SELECT INTO` NO heredan Row Level Security de la tabla de origen.** La
+copia queda con `relrowsecurity = false` aunque la madre este protegida, y los `GRANT` del schema
+le siguen aplicando, asi que `anon` hereda SELECT/INSERT/UPDATE/DELETE. Postgres no emite ninguna
+advertencia. **Prender RLS en el MISMO paso en que se crea la copia**, no despues:
+
+```sql
+create table <schema>.<copia> as select * from <schema>.<madre>;
+alter table <schema>.<copia> enable row level security;  -- sin politicas = deny-all para anon
+```
+
+Sin politicas, RLS habilitada deja la tabla accesible solo para `service_role`, que es exactamente
+lo que se quiere en un respaldo.
+
+**Caso real (2026-09-14):** `planify.bkp_items_mayo_20260914`, respaldo de la liquidacion de sueldos
+de mayo hecho —bien— antes de tocarla, quedo con 56 sueldos completos (legajo, nombre,
+`sueldo_bolsillo`, banco, aportes) legibles y borrables por cualquiera con la clave publishable,
+durante 24 horas. El respaldo estuvo bien; lo que falto fue el `alter`.
+
+Para barrer copias abiertas en un proyecto:
+
+```sql
+select n.nspname, c.relname
+  from pg_class c join pg_namespace n on n.oid = c.relnamespace
+ where c.relkind = 'r' and c.relrowsecurity = false
+   and has_table_privilege('anon', c.oid, 'SELECT')
+   and n.nspname not in ('pg_catalog','information_schema','pg_toast');
+```
