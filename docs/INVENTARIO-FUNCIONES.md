@@ -55,3 +55,20 @@ Archivos: `operarios_gp2.js`, `Registro_GP2.html`, `Operarios_GP2.html`, `sw.js`
 3. **Regla 0 de GP2** (nada de `public`): matrices, operarios y balancines de Cervantes hoy viven en
    `public`. Hay que mapearlos a `GP2` (`GP2.matriz` ya existe) o dejar el puente del punto 2 explícito.
 4. **Cola offline** (`sw.js`): tiene que mandar la sesión y no perder cargas si vence.
+
+## 4. Diferencias entre los dos sistemas (29/09)
+
+| Tema | Registro Producción 2.0 (Cervantes, en uso) | GP2 app de operarios (sin uso) |
+|---|---|---|
+| Dónde guarda | `public`: `db_n8n_espejo` + `Registros Produccion Cervantes` | `GP2`: eventos/producción por RPC (`registrar_evento_prod`) |
+| Quién calcula | la **tablet** arma tiempos/premio y los escribe en la tabla | la **base** calcula (funciones GP2) |
+| Botones | 20: E, C, PB, BC, MOV, LIMP, Perm, AL, PR, PC, **RD**, MOV P, **MM**, **CM**, PM, RM, **REM**, **PCM**, **TRM**, **TL** | 14: faltan RD, MM, CM, REM, PCM, TRM, TL; tiene **CT** (solo legajo 19) |
+| Qué ve cada operario | por rol, desde flags de `Empleados` (`capsDe`/`botonVisible`) | todos lo mismo; `if legajo === "19"` hardcodeado |
+| Cajón | anota **unidades**; controla stock por cajón (`registrar_unidades` → `UnixCajon`) | anota **golpes** del contador × `GP2.matriz.uni_x_golpe` |
+| Fleje / rollos | no | `tomar_rollo` / `cerrar_rollo` (consumo de fleje en el inventario GP2) |
+| Cambiar matriz (CM) | asigna la matriz al balancín (`asignar_matriz_balancin`) | no existe |
+| Alertas WhatsApp | sí (`send-whatsapp`, plantillas) | no |
+| Login | legajo (compartido con GV, `vir_legajo_auth`) o Google para 3 mails fijos en el código | legajo, sin sesión |
+| Seguridad hoy | ninguna: todo con la clave pública | las 5 que escriben ya exigen sesión (pero no aceptan rol operario) |
+| Cola offline | sí (`sw.js`) | sí (`sw.js`) |
+| Quién lee lo que escribe | reporte diario 18:00, premios, Planify, racha, disruptivas, tiempos | stock/costos GP2 |
