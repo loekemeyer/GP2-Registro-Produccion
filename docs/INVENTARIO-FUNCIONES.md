@@ -333,3 +333,22 @@ al abrir, "Legajo no encontrado" para todos. GP2: `registro_operarios_bundle` si
 Nueva: guardar el último bundle en el aparato y entrar con él sin red.
 
 **23. Kiosko / TV.** No existe en ninguna de las dos.
+
+### 7.3 Decisiones pendientes del dueño (29/09)
+
+Resuelta: ~~aparato compartido~~ → en Cervantes cada operario usa su celular (29/09).
+
+| # | Pregunta | Recomendación |
+|---|---|---|
+| 1 | Llegada tarde: ¿08:30 fijo o `hora_entrada` de cada empleado? | la de cada empleado, calculada en la base |
+| 2 | PM (paro de matriz): ¿tiempo muerto con duración (RP) o aviso puntual (GP2)? | tiempo muerto: es tiempo perdido |
+| 3 | Cajón en Cervantes: ¿unidades (RP) o golpes × factor (GP2)? | golpes × factor, con confirmación si factor > 1 |
+| 4 | CM: ¿el balancín es obligatorio? ¿deja la matriz nueva como activa sin tocar E? | balancín obligatorio; matriz queda activa |
+| 5 | RM (rompió matriz): ¿cierra el cajón como completo y pasa a CM, como hoy? | sí, igual que RP |
+| 6 | Deshacer: ¿ventana de cuántos minutos? ¿editar solo supervisor? ¿devuelve stock? | 15 min, editar supervisor, sí devuelve |
+| 7 | Terminar Día con tiempo muerto abierto: ¿se cierra solo o bloquea? | se cierra solo con la hora del FJ |
+| 8 | "Continuar cajón" al otro día: ¿se mantiene? ¿qué reemplaza al código 151515? | mantener; la base lo resuelve, sin código |
+| 9 | Rollos de fleje en Cervantes, ¿se usan? Legajo 19 (Eduardo) → ¿permiso por flag? | flag en empleado, nunca legajo |
+| 10 | ¿Hay turnos que pasan la medianoche? | si no, lo abierto se cierra al FJ o a las 23:59 |
+| 11 | WhatsApp: ¿qué eventos, a quién, con plantilla? (hoy: matriz sin tiempo, PM, RM) | los 3, por plantilla, desde la base |
+| 12 | ¿Qué botones quedan? (RD, REM, MM, TRM, TL, PCM) y las 8 variantes de matriz escritas en el código | por uso real; variantes como dato |
