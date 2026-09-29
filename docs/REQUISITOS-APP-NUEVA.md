@@ -57,7 +57,8 @@ Cómo:
   Comparar en minúscula. Nunca identificar por el número solo.
 - Permisos de botones y horario de producción: tabla GP2 atada a `planify.employees.id`.
 - `login-operario` (hoy valida contra `public."Empleados"`) pasa a validar contra `planify.employees` activo.
-- Pantalla de legajo: botón grande de empresa + número con teclado numérico (a confirmar).
+- Pantalla de legajo: la letra es parte del legajo → teclado propio en pantalla (0-9 + C), botones grandes.
+- Filtro: `planify.employees` activo y tipo operario. HOY los 56 son "administrativo" → RRHH tiene que marcar operarios.
 - Detalle: `CONOCIMIENTO_GP2.md` §4gq (repo Gestion-Productiva-2.0).
 
 ## Pendiente de confirmar con el dueño
