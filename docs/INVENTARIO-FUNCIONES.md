@@ -72,3 +72,26 @@ Archivos: `operarios_gp2.js`, `Registro_GP2.html`, `Operarios_GP2.html`, `sw.js`
 | Seguridad hoy | ninguna: todo con la clave pública | las 5 que escriben ya exigen sesión (pero no aceptan rol operario) |
 | Cola offline | sí (`sw.js`) | sí (`sw.js`) |
 | Quién lee lo que escribe | reporte diario 18:00, premios, Planify, racha, disruptivas, tiempos | stock/costos GP2 |
+
+## 5. Envío sin conexión de Registro Producción 2.0 (cómo reintenta hoy)
+
+Tres colas separadas, todas con la clave pública:
+
+| Cola | Dónde vive | Qué manda | Quién reintenta |
+|---|---|---|---|
+| **Principal** (`enqueue` → `flushQueue`) | `localStorage` + copia en IndexedDB (`idbPut`) | mensaje a `Registros Produccion Cervantes` (`postToSupabase`) y después calcula el espejo en la tablet (`procesarParaEspejo` → `db_n8n_espejo`) | la página cada 3 s (`setInterval`), al volver la red (`online`), y el **service worker** en segundo plano (`sync` "flush-queue" → `processQueueInBackground`, lee IndexedDB) |
+| Stock de cajón (`flushStockQueue`) | solo `localStorage` | `rpc registrar_unidades` | la página cada 3 s |
+| Balancín (`flushBalancinQueue`) | solo `localStorage` | `rpc asignar_matriz_balancin` | la página |
+
+Detalles: lotes de 20; cada falla suma `__tries` y se anota en `Auditoria_Produccion` (1er intento y cada 5);
+timeout 15 s; `reconcileQueueWithIDB` saca de la cola de la página lo que el service worker ya mandó; el
+badge muestra ✓ / ⏳ N / ⚠ N.
+
+⚠ **[Probable] pérdida silenciosa hoy**: cuando el service worker manda un mensaje en segundo plano (app
+cerrada), sube solo el mensaje; `procesarParaEspejo` corre únicamente en la página. Al reabrir,
+`reconcileQueueWithIDB` lo da por enviado y **nunca calcula su fila en `db_n8n_espejo`** (tiempos/premio).
+En el diseño nuevo no pasa: la base calcula al recibir el mensaje, venga de la página o del service worker.
+
+Para la versión nueva: una sola cola (mensaje con `client_id`), el service worker manda la **sesión**
+guardada en IndexedDB en vez de la clave pública; si da 401 el ítem queda en cola hasta renovar la sesión.
+Stock y balancín dejan de ser colas aparte: los resuelve la base a partir del mensaje (C, CM).
