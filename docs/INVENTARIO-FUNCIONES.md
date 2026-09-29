@@ -338,17 +338,18 @@ Nueva: guardar el último bundle en el aparato y entrar con él sin red.
 
 Resuelta: ~~aparato compartido~~ → en Cervantes cada operario usa su celular (29/09).
 
-| # | Pregunta | Recomendación |
+| # | Tema | Decisión del dueño (29/09) |
 |---|---|---|
-| 1 | Llegada tarde: ¿08:30 fijo o `hora_entrada` de cada empleado? | la de cada empleado, calculada en la base |
-| 2 | PM (paro de matriz): ¿tiempo muerto con duración (RP) o aviso puntual (GP2)? | tiempo muerto: es tiempo perdido |
-| 3 | Cajón en Cervantes: ¿unidades (RP) o golpes × factor (GP2)? | golpes × factor, con confirmación si factor > 1 |
-| 4 | CM: ¿el balancín es obligatorio? ¿deja la matriz nueva como activa sin tocar E? | balancín obligatorio; matriz queda activa |
-| 5 | RM (rompió matriz): ¿cierra el cajón como completo y pasa a CM, como hoy? | sí, igual que RP |
-| 6 | Deshacer: ¿ventana de cuántos minutos? ¿editar solo supervisor? ¿devuelve stock? | 15 min, editar supervisor, sí devuelve |
-| 7 | Terminar Día con tiempo muerto abierto: ¿se cierra solo o bloquea? | se cierra solo con la hora del FJ |
-| 8 | "Continuar cajón" al otro día: ¿se mantiene? ¿qué reemplaza al código 151515? | mantener; la base lo resuelve, sin código |
-| 9 | Rollos de fleje en Cervantes, ¿se usan? Legajo 19 (Eduardo) → ¿permiso por flag? | flag en empleado, nunca legajo |
-| 10 | ¿Hay turnos que pasan la medianoche? | si no, lo abierto se cierra al FJ o a las 23:59 |
-| 11 | WhatsApp: ¿qué eventos, a quién, con plantilla? (hoy: matriz sin tiempo, PM, RM) | los 3, por plantilla, desde la base |
-| 12 | ¿Qué botones quedan? (RD, REM, MM, TRM, TL, PCM) y las 8 variantes de matriz escritas en el código | por uso real; variantes como dato |
+| 1 | Llegada tarde | horario de Planify de cada operario (`empleados_liquidacion.horario_laboral`, vía `GP2.operario_por_legajo`) |
+| 2 | PM | como RP: tiempo muerto con duración + aviso WhatsApp al abrir |
+| 3 | Cajón: unidades o golpes × factor | **PENDIENTE** (el dueño pidió explicación) |
+| 4 | CM | solo roles específicos + matricería + alimentador; asigna matriz↔balancín; NO deja la matriz activa a quien la cambia |
+| 5 | RM | igual que hoy + aviso WhatsApp |
+| 6 | Deshacer / editar | en el admin (maestro) |
+| 7 | Terminar Día con TM abierto | se cierra solo (RP ya lo hace, `confirmarTerminarDia` paso 2) |
+| 8 | Seguir cajón al otro día | se mantiene; el código de Logística = secreto en la base |
+| 9 | Rollos | los maneja el alimentador (rol), no el legajo 19 |
+| 10 | Turnos después de medianoche | no hay; al terminar el día se cierran los TM, no el cajón "sigo mañana" |
+| 11 | WhatsApp | los que ya existen (matriz sin tiempo, paro, rotura) |
+| 12 | Botones | los de RP con sus flags (RD, REM, MM, TRM, TL, PCM incluidos) |
+| + | Quién entra | planta NO alcanza (Pregelj 203 y Cornejo c91 son planta y no operarios): **PENDIENTE** permiso "registra producción" |
