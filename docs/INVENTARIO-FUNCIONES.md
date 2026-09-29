@@ -345,7 +345,7 @@ Resuelta: ~~aparato compartido~~ → en Cervantes cada operario usa su celular (
 | 3 | Cajón | `GP2.matriz.carga_en`: golpes si sale más de 1 por golpe (18 matrices), unidades si sale 1 (388), kg la piedra 501 (coma o punto = decimal; se guarda numérico) |
 | 4 | CM | solo roles específicos + matricería + alimentador; asigna matriz↔balancín; NO deja la matriz activa a quien la cambia |
 | 5 | RM | igual que hoy + aviso WhatsApp |
-| 6 | Deshacer / editar | en el admin = **Gestión Productiva 2** (pantalla en el repo GP2) |
+| 6 | Deshacer / editar | en el admin: **Cervantes → Gestión Productiva 2** (el maestro se muda ahí); **Virgilio → Gestión Virgilio** |
 | 7 | Terminar Día con TM abierto | se cierra solo (RP ya lo hace, `confirmarTerminarDia` paso 2) |
 | 8 | Seguir cajón al otro día | se mantiene; el código de Logística = secreto en la base |
 | 9 | Rollos | los maneja el alimentador (rol), no el legajo 19 |
