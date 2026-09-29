@@ -30,6 +30,19 @@ Cómo:
    guardado; si falla el guardado del borrador, no recarga y reintenta en el próximo ciclo.
 7. Se prueba con Playwright: llenar un input, forzar versión nueva, verificar que tras recargar el input y el
    modal vuelven igual.
+8. **Anti-duplicado (dueño 29/09: "no tendría que haber bug de combinar la 2 y la 3: que se envió pero al
+   regresar la página aparece para volver a enviar").** Tres candados, porque cualquiera solo puede fallar:
+   - **Un id por carga**: al abrir el formulario se genera un `client_id` y viaja DENTRO del borrador. El
+     mensaje que se envía lleva ese mismo `client_id`.
+   - **El borrador muere al encolar, no al llegar al servidor**: al tocar Enviar, primero se escribe en la
+     cola (IndexedDB) y, apenas esa escritura confirma, se borra el borrador y se anota el `client_id` en
+     `app_enviados` (últimos 200). Desde ese momento el envío es responsabilidad de la cola, no de la pantalla.
+   - **Al restaurar se verifica**: si el `client_id` del borrador ya está en la cola o en `app_enviados`, el
+     borrador se descarta y no se muestra. (Cubre el corte justo entre encolar y borrar el borrador.)
+   - **Y la base no duplica aunque llegue dos veces**: `GP2.recibir_mensaje_cervantes` es idempotente por
+     `client_id` (ya probado): el segundo envío devuelve "ya estaba" sin crear otra fila.
+   - Test: tocar Enviar, forzar la recarga en el medio (antes y después de encolar), y verificar que tras
+     volver hay exactamente 1 fila en la base y ningún formulario pidiendo reenviar.
 
 ## Pendiente de confirmar con el dueño
 - Horario de trabajo exacto para el chequeo (¿06:00–18:00? ¿sábados?).
