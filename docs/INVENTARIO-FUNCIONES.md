@@ -95,3 +95,23 @@ En el diseño nuevo no pasa: la base calcula al recibir el mensaje, venga de la 
 Para la versión nueva: una sola cola (mensaje con `client_id`), el service worker manda la **sesión**
 guardada en IndexedDB en vez de la clave pública; si da 401 el ítem queda en cola hasta renovar la sesión.
 Stock y balancín dejan de ser colas aparte: los resuelve la base a partir del mensaje (C, CM).
+
+## 6. Envío sin conexión: Registro Producción 2.0 vs GP2 (29/09)
+
+| Tema | Registro Producción 2.0 | GP2 (`operarios_gp2.js`) |
+|---|---|---|
+| Dónde guarda la cola | `localStorage` **+ IndexedDB** | solo `localStorage` |
+| Service worker (manda con la app cerrada) | **sí**, `sync` "flush-queue" | **no**: hay un `sw.js` en la carpeta pero la app **no lo registra** (copia muerta; además apunta a una tabla de `public`) |
+| Cada cuánto reintenta | cada **3 s** + al volver la red (`online`) | cada **60 s** + al tocar el badge / Terminar Día; no escucha `online` |
+| Qué manda | el mensaje crudo a la tabla, y **la tablet** calcula el espejo | el evento ya armado a `registrar_evento_prod` y **la base** calcula |
+| Lote / timeout | 20 por vuelta, 15 s de timeout | toda la cola, sin timeout |
+| Registro de fallas | a `Auditoria_Produccion` (1er intento y cada 5) | solo en la pantalla (`markFailed`) |
+| Colas aparte | stock de cajón y balancín (solo `localStorage`, sin SW) | rollos (`tomar_rollo`/`cerrar_rollo`), FIFO, corta al primer fallo de red; si el servidor rechaza con código, **lo descarta** |
+| Duplicados | `on_conflict=id` / `ID_Ejecucion` | `id_ejecucion` único en `GP2.produccion` |
+| Hueco conocido | lo que manda el SW no calcula el espejo (sección 5) | con la app cerrada no se manda nada; y desde el 28/09 `registrar_evento_prod` exige sesión → hoy toda carga anónima fallaría y quedaría en cola |
+
+**Para la app nueva se toma lo mejor de cada una**: cola en `localStorage` + IndexedDB y service worker de
+Registro Producción (reintento cada pocos segundos, `online`, timeout, auditoría de fallas), con el modelo
+de GP2 (mandar el mensaje y que **la base** calcule, idempotente por `client_id`), una sola cola (sin colas
+aparte de stock/balancín/rollos: la base las deriva del mensaje) y **la sesión** en cada envío, también
+desde el service worker.
