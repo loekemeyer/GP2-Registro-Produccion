@@ -342,7 +342,7 @@ Resuelta: ~~aparato compartido~~ → en Cervantes cada operario usa su celular (
 |---|---|---|
 | 1 | Llegada tarde | horario de Planify de cada operario (`empleados_liquidacion.horario_laboral`, vía `GP2.operario_por_legajo`) |
 | 2 | PM | como RP: tiempo muerto con duración + aviso WhatsApp al abrir |
-| 3 | Cajón | golpes × factor (contador a la vista); unidades en tipo D (dispositivo), piedra y excepciones → `GP2.matriz.carga_en`. **Falta la lista de excepciones** |
+| 3 | Cajón | `GP2.matriz.carga_en`: golpes si sale más de 1 por golpe (18 matrices), unidades si sale 1 (388), kg la piedra 501 (coma o punto = decimal; se guarda numérico) |
 | 4 | CM | solo roles específicos + matricería + alimentador; asigna matriz↔balancín; NO deja la matriz activa a quien la cambia |
 | 5 | RM | igual que hoy + aviso WhatsApp |
 | 6 | Deshacer / editar | en el admin (maestro) |
