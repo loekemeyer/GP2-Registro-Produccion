@@ -52,5 +52,7 @@ Cómo:
      riesgo de que el turno siguiente herede la carga de otro. Se restaura si es del mismo legajo y del mismo día.
 
 ## Pendiente de confirmar con el dueño
-- Wi-Fi de invitados: ¿sale a internet por la **misma IP pública** que el Wi-Fi de la empresa? Si sí, la regla
-  de red no distingue una del otro (el celular propio del operario puede estar en cualquiera de las dos).
+- (nada pendiente de R1)
+
+Dato del dueño 29/09: **no hay Wi-Fi de invitados; cada sede tiene un solo Wi-Fi.** Entra quien tenga
+la clave del Wi-Fi + un legajo activo.
