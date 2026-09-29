@@ -51,6 +51,15 @@ Cómo:
    - **Borrador válido hasta el fin del día** (no 30 min): el celular es de una sola persona, así que no hay
      riesgo de que el turno siguiente herede la carga de otro. Se restaura si es del mismo legajo y del mismo día.
 
+## R2. Los operarios salen de `planify.employees` (RRHH), no de `public."Empleados"` (29/09)
+
+- El legajo es **texto con la letra de la empresa** (`c94` ≠ `94`; hay colisiones reales: 29/c29, 122/C122).
+  Comparar en minúscula. Nunca identificar por el número solo.
+- Permisos de botones y horario de producción: tabla GP2 atada a `planify.employees.id`.
+- `login-operario` (hoy valida contra `public."Empleados"`) pasa a validar contra `planify.employees` activo.
+- Pantalla de legajo: botón grande de empresa + número con teclado numérico (a confirmar).
+- Detalle: `CONOCIMIENTO_GP2.md` §4gq (repo Gestion-Productiva-2.0).
+
 ## Pendiente de confirmar con el dueño
 - (nada pendiente de R1)
 
