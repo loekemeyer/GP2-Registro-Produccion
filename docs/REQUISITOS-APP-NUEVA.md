@@ -12,7 +12,7 @@ Nota: reemplaza la decisión del 28/09 para Gestión Virgilio ("no recargar solo
 de una carga"): acá la recarga es automática **porque** se guarda y se restaura el estado.
 
 Cómo:
-1. **Cada 10 min, solo en horario de trabajo** (**07:00–18:00 AR**, dueño 29/09: amplio "por si llegan antes y se van después"): pedir
+1. **Cada 10 min, solo en horario de trabajo** (**lunes a sábado, 07:00–18:00 AR**, dueño 29/09: amplio "por si llegan antes y se van después"): pedir
    `version.json` sin caché y comparar con la versión cargada. Fuera de horario, no chequea.
 2. **Si hay versión nueva**, antes de recargar:
    - la **cola de envíos** ya está en IndexedDB/localStorage (no se pierde);
@@ -45,5 +45,4 @@ Cómo:
      volver hay exactamente 1 fila en la base y ningún formulario pidiendo reenviar.
 
 ## Pendiente de confirmar con el dueño
-- ¿Sábados también? (horario ya definido: 07:00–18:00).
 - Minutos máximos para restaurar un borrador (propuesto: 30).
