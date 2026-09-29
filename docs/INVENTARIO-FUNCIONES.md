@@ -352,5 +352,5 @@ Resuelta: ~~aparato compartido~~ → en Cervantes cada operario usa su celular (
 | 10 | Turnos después de medianoche | no hay; al terminar el día se cierran los TM, no el cajón "sigo mañana" |
 | 11 | WhatsApp | los que ya existen (matriz sin tiempo, paro, rotura) |
 | 12 | Botones | los de RP con sus flags (RD, REM, MM, TRM, TL, PCM incluidos) |
-| + | Quién entra | activo en Planify + planta + casilla "registra producción" (`GP2.operario`, la maneja el admin GP2). Hecho 29/09: 15 prendidos (incl. Alberto Práctico), 4 apagados (Pregelj, Cornejo, Pages, González) |
+| + | Quién entra | todo activo en Planify + planta; `GP2.operario.registra_produccion=false` = excepción que apaga el admin GP2 (hoy ninguna). Pregelj y Cornejo son matricería: entran y ven solo TRM/TL/REM/CM |
 | + | Piedra "pendiente de pesar" | válida, pero **solo si el admin la habilita en el panel admin** (= Gestión Productiva 2) (apagada por defecto; la base la rechaza si está apagada). El peso se carga después en el admin sobre el cajón original |

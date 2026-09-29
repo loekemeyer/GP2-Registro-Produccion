@@ -59,7 +59,7 @@ Cómo:
 - `login-operario` (hoy valida contra `public."Empleados"`) pasa a validar contra `planify.employees` activo.
 - Pantalla de legajo: la letra es parte del legajo → teclado propio en pantalla (0-9 + C), botones grandes.
 - Filtro: `planify.employees` activo + `planify.empleados_liquidacion.tipo_empleado='planta'` activo (por `employee_id`)
-  + casilla `GP2.operario.registra_produccion` (planta sola no alcanza). Todo resuelto en `GP2.operario_por_legajo`.
+  salvo `GP2.operario.registra_produccion=false` (excepción; sin fila = habilitado). Todo en `GP2.operario_por_legajo`.
   Esa tabla es de sueldos: se lee solo vía función SECURITY DEFINER que devuelve legajo, nombre y si es planta.
 - Legajo 600 = pruebas (caso especial).
 - Detalle: `CONOCIMIENTO_GP2.md` §4gq (repo Gestion-Productiva-2.0).
