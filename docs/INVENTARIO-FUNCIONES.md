@@ -353,3 +353,4 @@ Resuelta: ~~aparato compartido~~ → en Cervantes cada operario usa su celular (
 | 11 | WhatsApp | los que ya existen (matriz sin tiempo, paro, rotura) |
 | 12 | Botones | los de RP con sus flags (RD, REM, MM, TRM, TL, PCM incluidos) |
 | + | Quién entra | planta NO alcanza (Pregelj 203 y Cornejo c91 son planta y no operarios): **PENDIENTE** permiso "registra producción" |
+| + | Piedra "pendiente de pesar" | válida, pero **solo si el admin la habilita en el panel admin** (apagada por defecto; la base la rechaza si está apagada). El peso se carga después en el admin sobre el cajón original |
