@@ -44,5 +44,13 @@ Cómo:
    - Test: tocar Enviar, forzar la recarga en el medio (antes y después de encolar), y verificar que tras
      volver hay exactamente 1 fila en la base y ningún formulario pidiendo reenviar.
 
+9. **En Cervantes el aparato es el CELULAR PROPIO del operario, no una tablet** (dueño 29/09). Cambia dos cosas:
+   - **El chequeo no puede depender solo del reloj de 10 min**: con el celular en el bolsillo el navegador
+     congela la página y el temporizador no corre. Se chequea además **al volver la app al frente**
+     (`visibilitychange`), y si hay versión nueva se recarga **en ese momento**, antes de que toque nada.
+   - **Borrador válido hasta el fin del día** (no 30 min): el celular es de una sola persona, así que no hay
+     riesgo de que el turno siguiente herede la carga de otro. Se restaura si es del mismo legajo y del mismo día.
+
 ## Pendiente de confirmar con el dueño
-- Minutos máximos para restaurar un borrador (propuesto: 30).
+- Wi-Fi de invitados: ¿sale a internet por la **misma IP pública** que el Wi-Fi de la empresa? Si sí, la regla
+  de red no distingue una del otro (el celular propio del operario puede estar en cualquiera de las dos).

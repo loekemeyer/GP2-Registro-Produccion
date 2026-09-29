@@ -152,6 +152,11 @@ Datos confirmados con SELECT (29/09). Lo de envío sin conexión está en 5 y 6 
 
 ### 7.2 Detalle por sistema
 
+> **Dato del dueño (29/09): en Cervantes cada operario carga desde SU celular, no hay tablet compartida.**
+> Donde abajo dice "tablet", en Cervantes léase "celular del operario". Consecuencias: el legajo oculto todo el
+> día no es un problema de aparato compartido; sí lo es que el celular esté en el Wi-Fi correcto (regla de red)
+> y que el navegador congele la página en el bolsillo (temporizadores, cola en segundo plano).
+
 **1. Identificación y sesión.**
 RP: `goToOptions` (app.js:1595) solo exige que el legajo esté en `empleadosMap`, **no mira `Activo`** (hay 70
 empleados, 35 activos). El gate de `index.html:29-84` precarga el legajo si hay `vir_legajo_auth` del día o sesión
