@@ -345,7 +345,7 @@ Resuelta: ~~aparato compartido~~ → en Cervantes cada operario usa su celular (
 | 3 | Cajón | `GP2.matriz.carga_en`: golpes si sale más de 1 por golpe (18 matrices), unidades si sale 1 (388), kg la piedra 501 (coma o punto = decimal; se guarda numérico) |
 | 4 | CM | solo roles específicos + matricería + alimentador; asigna matriz↔balancín; NO deja la matriz activa a quien la cambia |
 | 5 | RM | igual que hoy + aviso WhatsApp |
-| 6 | Deshacer / editar | en el admin (maestro) |
+| 6 | Deshacer / editar | en el admin = **Gestión Productiva 2** (pantalla en el repo GP2) |
 | 7 | Terminar Día con TM abierto | se cierra solo (RP ya lo hace, `confirmarTerminarDia` paso 2) |
 | 8 | Seguir cajón al otro día | se mantiene; el código de Logística = secreto en la base |
 | 9 | Rollos | los maneja el alimentador (rol), no el legajo 19 |
@@ -353,4 +353,4 @@ Resuelta: ~~aparato compartido~~ → en Cervantes cada operario usa su celular (
 | 11 | WhatsApp | los que ya existen (matriz sin tiempo, paro, rotura) |
 | 12 | Botones | los de RP con sus flags (RD, REM, MM, TRM, TL, PCM incluidos) |
 | + | Quién entra | planta NO alcanza (Pregelj 203 y Cornejo c91 son planta y no operarios): **PENDIENTE** permiso "registra producción" |
-| + | Piedra "pendiente de pesar" | válida, pero **solo si el admin la habilita en el panel admin** (apagada por defecto; la base la rechaza si está apagada). El peso se carga después en el admin sobre el cajón original |
+| + | Piedra "pendiente de pesar" | válida, pero **solo si el admin la habilita en el panel admin** (= Gestión Productiva 2) (apagada por defecto; la base la rechaza si está apagada). El peso se carga después en el admin sobre el cajón original |
